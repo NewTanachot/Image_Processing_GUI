@@ -54,10 +54,10 @@ def show_btn():
     rotate_countercw_icon = ImageTk.PhotoImage(Image.open('./img_res/counter-rotate.png').resize((25,25)))
 
     rotate_cw = tk.Button(edit_first_frame,image=rotate_countercw_icon, command=lambda: rotate_img(edit_second_frame, True))
-    rotate_cw.grid(row=0,column=1, pady=10)
+    rotate_cw.grid(row=0,column=1, padx=5, pady=10)
 
     rotate_cw = tk.Button(edit_first_frame,image=rotate_cw_icon, command=lambda: rotate_img(edit_second_frame, False))
-    rotate_cw.grid(row=0,column=2, padx=10, pady=10)
+    rotate_cw.grid(row=0,column=2, padx=5, pady=10)
 
     # filter = tk.Button(first_frame,text='filter')
     # filter.grid(row=0,column=2,padx=10 ,pady=10)
@@ -69,6 +69,7 @@ def show_btn():
     photo = ImageTk.PhotoImage(img)
     tk.Label(edit_second_frame, image=photo).grid(row=0,column=0)
 
+    # Set Rotage Image to Global Stage
     G_rotate_img = cv2.cvtColor(cv2.imread(filePath), cv2.COLOR_BGR2RGB)
 
     edit_img.title('Image Editor')
@@ -76,17 +77,17 @@ def show_btn():
     
 def rotate_img(frame_2, isCounterClockwise):
   
-    global edge, G_rotate_img
+    global roImg, G_rotate_img
     
     if isCounterClockwise == True:
         G_rotate_img = cv2.rotate(G_rotate_img, cv2.ROTATE_90_COUNTERCLOCKWISE)
     else:
         G_rotate_img = cv2.rotate(G_rotate_img, cv2.ROTATE_90_CLOCKWISE)
 
-    edge = Image.fromarray(G_rotate_img)
-    edge = ImageTk.PhotoImage(edge)
+    roImg = Image.fromarray(G_rotate_img)
+    roImg = ImageTk.PhotoImage(roImg)
 
-    tk.Label(frame_2, image=edge).grid(row=1,column=0)
+    tk.Label(frame_2, image=roImg).grid(row=1,column=0)
 
 app_name = 'Image Processing'
 
