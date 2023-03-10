@@ -1,18 +1,17 @@
+#Tkinter
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
-from tkinter import *
+
+#Pilow
 from pathlib import Path
-
-import cv2
-import os
-import numpy as np
-
 from PIL import ImageTk,Image
 
+#Open CV
+import cv2
+import numpy as np
 
 global filePath, G_rotation_angle, G_filter_state, photoImage, state_img
-
 filePath = ''
 
 def choose_img():
@@ -23,10 +22,10 @@ def choose_img():
     FILE = Path(__file__).resolve()
     filePath = filedialog.askopenfilename(initialdir = FILE.parent) 
 
-    tk.Label(first_frame,text='Path: ' + filePath).grid(row=2,column=1, pady=10)
+    tk.Label(first_frame, text='Path: ' + filePath).grid(row=2,column=1, pady=10)
    
 def image_console():
-    global G_rotation_angle, filePath , G_filter_state
+    global G_rotation_angle, G_filter_state , filePath
 
     if not filePath:
         messagebox.showwarning("Error", "No image selected!")
@@ -44,7 +43,7 @@ def image_console():
     button_frame.pack()
 
     photo_frame  = tk.Frame(edit_img)
-    photo_frame.pack(expand=True, pady=25)
+    photo_frame.pack()
  
     # store array image (for openCV)
     array_img = cv2.imread(filePath) # got array of image
@@ -57,13 +56,13 @@ def image_console():
     rotate_cw_icon        = ImageTk.PhotoImage(Image.open('./img_res/rotate.png').resize((25,25)))
     rotate_countercw_icon = ImageTk.PhotoImage(Image.open('./img_res/counter-rotate.png').resize((25,25)))
 
-    tk.Button(button_frame,image=rotate_countercw_icon, command=lambda: rotate_img(array_img, photo_frame, True)) .grid(row=0,column=0, padx=5)
-    tk.Button(button_frame,image=rotate_cw_icon,        command=lambda: rotate_img(array_img, photo_frame, False)).grid(row=0,column=1, padx=5)
+    tk.Button(button_frame, image=rotate_countercw_icon, command=lambda: rotate_img(array_img, photo_frame, True)) .grid(row=0,column=0, padx=5)
+    tk.Button(button_frame, image=rotate_cw_icon,        command=lambda: rotate_img(array_img, photo_frame, False)).grid(row=0,column=1, padx=5)
     
     tk.Button(button_frame, text="Origin", command=lambda: originImg(OriginImg, photo_frame))  .grid(row=0, column=2, padx=5)
-    tk.Button(button_frame, text="Edge", command=lambda: edge(array_img, photo_frame))  .grid(row=0, column=3, padx=5)
-    tk.Button(button_frame, text="Sepia",command=lambda: sepia(array_img, photo_frame)) .grid(row=0, column=4, padx=5)
-    tk.Button(button_frame, text="Ghost",command=lambda: invert(array_img, photo_frame)).grid(row=0, column=5, padx=5)
+    tk.Button(button_frame, text="Edge",   command=lambda: edge(array_img, photo_frame))  .grid(row=0, column=3, padx=5)
+    tk.Button(button_frame, text="Sepia",  command=lambda: sepia(array_img, photo_frame)) .grid(row=0, column=4, padx=5)
+    tk.Button(button_frame, text="Ghost",  command=lambda: invert(array_img, photo_frame)).grid(row=0, column=5, padx=5)
     tk.Button(button_frame, text="RedOnly",command=lambda: red_filter(array_img, photo_frame)).grid(row=0, column=6, padx=5)
 
     # Save image button 
@@ -81,7 +80,7 @@ def showImg(img, frame):
     global photoImage, state_img
 
     resize_img = resizeImg(img)
-    image = Image.fromarray(resize_img)
+    image      = Image.fromarray(resize_img)
     photoImage = ImageTk.PhotoImage(image) 
 
     # set Stage image for save method
@@ -91,7 +90,6 @@ def showImg(img, frame):
     tk.Label(frame, image=photoImage).grid(row=0,column=0)
 
 def resizeImg(img):
-
     # default scale_percent
     scale_percent = 100
 
@@ -101,7 +99,7 @@ def resizeImg(img):
     elif (img.shape[1] >= 1300 or img.shape[0] >= 900):
         scale_percent = 50
 
-    width = int(img.shape[1] * scale_percent / 100)
+    width  = int(img.shape[1] * scale_percent / 100)
     height = int(img.shape[0] * scale_percent / 100)
     dim = (width, height)
   
@@ -170,7 +168,6 @@ def checkFilterState(img):
 
 #Fucntion about All Filter
 #*******************************************************************
-
 def originImg(img, frame):
     global G_filter_state
 
@@ -340,7 +337,6 @@ def saveImg():
 
 #Main 
 #*********************************************************
-
 #Create GUI Program
 app_name = 'Image Filter Program'
 
@@ -353,14 +349,11 @@ app_root.geometry("500x250")
 first_frame  = tk.Frame(app_root)
 first_frame.pack() #Center 
 
-#Create Button
-# take_pic_button = tk.Button(first_frame, text = 'Take a photo').grid(row=0,column=1, pady=10)
-
 tk.Label(first_frame, text = 'Image Filter Program', font=("Arial", 25)).grid(row=1,column=1, pady=15)
 
+#Create Button
 choose_button   = tk.Button(first_frame, text = 'Choose image',command = choose_img)   .grid(row=3,column=1, pady=10)
 show_button     = tk.Button(first_frame, text = 'Show image',  command = image_console).grid(row=5,column=1, pady=10)
 
 app_root.mainloop()
 #*********************************************************
-
